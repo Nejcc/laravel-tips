@@ -40,15 +40,15 @@ To follow this guide, you should have:
 
 First, create a new middleware named `CachePage`.
 
-\`\`\`bash
+```bash
 php artisan make:middleware CachePage
-\`\`\`
+```
 
 ### Step 2: Implementing Caching Logic
 
 Open the `CachePage` middleware and implement caching logic like so:
 
-\`\`\`php
+```php
 namespace App\Http\Middleware;
 
 use Closure;
@@ -70,7 +70,7 @@ class CachePage
         return $response;
     }
 }
-\`\`\`
+```
 
 Here, we generate a cache key based on the URL using SHA-1 hashing. If a cache exists for this key, we return the cached HTML. Otherwise, we continue with the request and save the HTML output in the cache for 5 minutes.
 
@@ -78,20 +78,20 @@ Here, we generate a cache key based on the URL using SHA-1 hashing. If a cache e
 
 Register the middleware in `app/Http/Kernel.php` to make it available for use.
 
-\`\`\`php
+```php
 protected $routeMiddleware = [
     // ... existing middlewares
     'cache.page' => \App\Http\Middleware\CachePage::class,
 ];
-\`\`\`
+```
 
 ### Step 4: Applying Middleware to Routes
 
 Now, you can apply this middleware to any route that you want to cache.
 
-\`\`\`php
+```php
 Route::get('/some-page', 'SomeController@someMethod')->middleware('cache.page');
-\`\`\`
+```
 
 ---
 
@@ -101,9 +101,9 @@ Sometimes you might want to cache a page indefinitely until something explicitly
 
 Change the line for caching the page in the middleware to:
 
-\`\`\`php
+```php
 Cache::forever($key, $response->getContent());
-\`\`\`
+```
 
 This will cache the HTML output indefinitely until you manually clear it.
 
@@ -115,7 +115,7 @@ This will cache the HTML output indefinitely until you manually clear it.
 
 To exclude certain sections from being cached, you can use custom Blade directives. Add these directives in your `AppServiceProvider`:
 
-\`\`\`php
+```php
 Blade::directive('notcached', function ($expression) {
     return "<?php ob_start(); ?>";
 });
@@ -123,17 +123,17 @@ Blade::directive('notcached', function ($expression) {
 Blade::directive('endnotcached', function ($expression) {
     return "<?php ob_end_clean(); ?>";
 });
-\`\`\`
+```
 
 ### Step 2: Using Blade Directives in Views
 
 Wrap dynamic content between `@notcached` and `@endnotcached` in your Blade views.
 
-\`\`\`blade
+```blade
 @notcached
     <p>This is Dynamic: {{ time() }}</p>
 @endnotcached
-\`\`\`
+```
 
 These sections will not be cached, allowing you to insert dynamic or user-specific content.
 
@@ -153,34 +153,34 @@ For example, you can invalidate cache using tags or prefixes, allowing you to cl
 
 To cache all routes, add your middleware to the `web` middleware group in `RouteServiceProvider`.
 
-\`\`\`php
+```php
 protected function mapWebRoutes()
 {
     Route::middleware(['web', 'cache.page.forever'])
         ->namespace(this->namespace)
         ->group(base_path('routes/web.php'));
 }
-\`\`\`
+```
 
 ### Option 2: Cache Specific Routes
 
 To cache specific routes, apply middleware directly on those routes.
 
-\`\`\`php
+```php
 Route::get('/some-page', 'SomeController@someMethod')->middleware('cache.page');
-\`\`\`
+```
 
 ### Option 3: Cache Groups of Routes
 
 To cache a group of routes, you can wrap them in a middleware group.
 
-\`\`\`php
+```php
 Route::middleware(['cache.page.forever'])->group(function () {
     Route::get('/page1', 'PageController@page1');
     Route::get('/page2', 'PageController@page2');
     // ... more routes
 });
-\`\`\`
+```
 
 ---
 
