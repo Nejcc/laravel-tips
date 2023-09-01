@@ -58,7 +58,8 @@ class CachePage
 {
     public function handle($request, Closure $next)
     {
-        $key = 'page_' . sha1($request->url());
+        $version = config('app.cache_version', 1); // Get the current version from your config or database
+        $key = 'page_' . sha1($request->url()) . "_v{$version}";
 
         if (Cache::has($key)) {
             return response(Cache::get($key));
