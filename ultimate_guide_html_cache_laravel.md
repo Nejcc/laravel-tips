@@ -188,3 +188,66 @@ Route::middleware(['cache.page.forever'])->group(function () {
 ## NOTICE!
 
 HTML caching can dramatically improve your Laravel application's performance. While it's a powerful technique, it's essential to use it judiciously, considering factors like dynamic content and cache invalidation. This guide should provide you with a solid foundation to start implementing advanced HTML caching strategies in your Laravel projects.
+
+# Bonus Content: Cache Versioning to Sync Server and Client
+
+Bonus Content: Cache Versioning to Sync Server and Client
+While caching can significantly improve the performance of your application, it also introduces the complexity of keeping the cache up-to-date. One common issue is ensuring that the client-side cache is invalidated when the server-side cache is updated. Here's how you can handle this by using a cache versioning strategy.
+
+First, create a new middleware named `CachePage`.
+
+```bash
+php artisan make:middleware SetCacheHeadersMiddleware
+```
+
+Here's how the updated middleware might look:
+```php
+class SetCacheHeadersMiddleware
+{
+    public function handle($request, Closure $next)
+    {
+        $response = $next($request);
+        $time = 86400*7; // Cache for 7 days
+
+        // Set versioning
+        $version = 'v1';
+        $response->header('ETag', $version);
+
+        // Set caching headers for static resources
+        $response->header('Expires', gmdate('D, d M Y H:i:s', time() + $time) . ' GMT');
+        $response->header('Cache-Control', "public, max-age={$time}");
+
+        return $response;
+    }
+}
+```
+
+## Step 3: Validate Version on Client-Side
+On the client side, the browser will automatically send the ETag value back to the server in the If-None-Match header for every subsequent request to the same resource. On the server side, you can compare this against the current ETag value.
+
+```php
+public function handle($request, Closure $next)
+{
+    $currentVersion = 'v1';
+    $clientVersion = $request->header('If-None-Match');
+
+    if ($currentVersion === $clientVersion) {
+        return response(null, 304);  // Not Modified
+    }
+
+    // ... rest of the code
+}
+```
+
+## Step 4: Update Version When Content Changes
+Whenever the content that you're caching changes, make sure to update the version number both in your server-side caching middleware and your client-side SetCacheHeadersMiddleware.
+
+By implementing cache versioning, you can ensure that your users are always seeing the most up-to-date content, while still benefiting from the performance improvements that caching provides.
+
+
+
+
+
+
+
+
