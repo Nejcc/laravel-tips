@@ -66,7 +66,7 @@ class CachePage
 
         $response = $next($request);
         Cache::put($key, $response->getContent(), now()->addMinutes(5));
-
+        // Cache::forever($key, $response->getContent());
         return $response;
     }
 }
