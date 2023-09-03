@@ -1,4 +1,59 @@
 
+# Table of Contents
+
+1. [Introduction](#introduction)
+2. [Prerequisites](#prerequisites)
+3. [Setting up Laravel 10](#setting-up-laravel-10)
+    - [Installing Laravel](#installing-laravel)
+    - [Setting up the Database](#setting-up-the-database)
+    - [Basic Configuration](#basic-configuration)
+4. [Models and Migrations Continued](#models-and-migrations-continued)
+5. [Controllers](#controllers)
+    - [UserController](#usercontroller)
+    - [PostController](#postcontroller)
+    - [CommentController](#commentcontroller)
+6. [Policies and Authorization](#policies-and-authorization)
+7. [Form Requests for Validation](#form-requests-for-validation)
+8. [Services](#services)
+9. [Views](#views)
+10. [Implementing Permissions with Spatie Laravel Permission](#implementing-permissions-with-spatie-laravel-permission)
+11. [Testing](#testing)
+
+# Code Structure Tree
+
+```
+advanced-forum/
+|-- app/
+|   |-- Http/
+|   |   |-- Controllers/
+|   |   |   |-- UserController.php
+|   |   |   |-- PostController.php
+|   |   |   |-- CommentController.php
+|   |-- Providers/
+|   |   |-- AuthServiceProvider.php
+|   |-- Services/
+|   |   |-- UserService.php
+|-- database/
+|   |-- migrations/
+|   |   |-- create_users_table.php
+|   |   |-- create_posts_table.php
+|   |   |-- create_comments_table.php
+|-- resources/
+|   |-- views/
+|   |   |-- posts/
+|   |   |   |-- index.blade.php
+|   |   |   |-- show.blade.php
+|   |   |   |-- create.blade.php
+|-- routes/
+|   |-- web.php
+|-- tests/
+|   |-- Feature/
+|   |   |-- PostControllerTest.php
+|   |-- Unit/
+|   |   |-- UserModelTest.php
+|   |   |-- PostPolicyTest.php
+```
+
 # Building an Advanced Forum with Laravel 10: The Ultimate Guide
 
 ---
