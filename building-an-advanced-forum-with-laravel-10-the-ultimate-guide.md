@@ -1,5 +1,6 @@
+# Building an Advanced Forum with Laravel 10: The Ultimate Guide
 
-# Table of Contents
+## Table of Contents
 
 1. [Introduction](#introduction)
 2. [Prerequisites](#prerequisites)
@@ -19,7 +20,7 @@
 10. [Implementing Permissions with Spatie Laravel Permission](#implementing-permissions-with-spatie-laravel-permission)
 11. [Testing](#testing)
 
-# Code Structure Tree
+## Code Structure Tree
 
 ```
 advanced-forum/
@@ -54,7 +55,7 @@ advanced-forum/
 |   |   |-- PostPolicyTest.php
 ```
 
-# Building an Advanced Forum with Laravel 10: The Ultimate Guide
+
 
 ---
 
